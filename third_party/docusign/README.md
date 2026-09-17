@@ -4,6 +4,26 @@ Cursor plugin that connects agents to [Docusign](https://www.docusign.com) throu
 
 Work with eSignature envelopes and templates, Maestro workflows, and Navigator agreement data from the signed-in Docusign account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --client-id <client-id> \
+  --client-secret \
+  --callback-port 8787 \
+  docusign \
+  https://mcp.docusign.com/mcp
+```
+
+- Replace `<client-id>` with the client ID of the OAuth app described in Setup. Register `http://localhost:8787/callback` as a redirect URL on that app. `--client-secret` prompts for the secret without echoing it.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

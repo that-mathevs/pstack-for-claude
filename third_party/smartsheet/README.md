@@ -4,6 +4,24 @@ Cursor plugin that connects agents to [Smartsheet](https://www.smartsheet.com) t
 
 Find sheets, read and update rows and columns, and work with discussions and workspaces in your Smartsheet account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --header "Authorization: Bearer ${SMARTSHEET_API_TOKEN}" \
+  smartsheet \
+  https://mcp.smartsheet.com
+```
+
+- Export `SMARTSHEET_API_TOKEN` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Customer.io](https://customer.io) through
 
 Inspect workspace data, build and manage campaigns and one-time sends, work with segments and people, and query the Journeys and Data Pipelines APIs in the signed-in Customer.io workspace.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  customer-io \
+  https://mcp.customer.io/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

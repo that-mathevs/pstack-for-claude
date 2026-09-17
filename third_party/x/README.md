@@ -4,6 +4,26 @@ Cursor plugin that connects agents to the [X API](https://docs.x.com) through X'
 
 This plugin signs you in with OAuth as your own X account. It is no longer read-only: alongside searching and reading public X data, agents can manage your lists, bookmarks, blocks, and mutes, and call X Chat endpoints.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --client-id NGdZYmo4VVp2T1BnRG55NlExOGQ6MTpjaQ \
+  --callback-port 8787 \
+  x \
+  https://api.x.com/mcp
+```
+
+- The client ID is the one upstream ships for Cursor. The command uses port 8787 to match Cursor's desktop redirect, but nobody has tested this sign-in from Claude Code.
+- `claude mcp add` has no flag for OAuth scopes, so the server's defaults apply: `tweet.read`, `users.read`, `follows.read`, `space.read`, `mute.read`, `like.read` and more.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

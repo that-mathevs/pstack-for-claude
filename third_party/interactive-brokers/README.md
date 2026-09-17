@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Interactive Brokers](https://www.interact
 
 Review positions, balances, P&L, and draft trade instructions.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  interactive-brokers \
+  https://api.ibkr.com/v1/api/mcp-public
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

@@ -4,6 +4,24 @@ Cursor plugin that connects agents to [Wrike](https://www.wrike.com) through Wri
 
 Search a Wrike workspace, navigate folder and project hierarchies, and create or update tasks, projects, and comments.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --header "Authorization: Bearer ${WRIKE_ACCESS_TOKEN}" \
+  wrike \
+  https://mcp.wrike.com/v2
+```
+
+- Export `WRIKE_ACCESS_TOKEN` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

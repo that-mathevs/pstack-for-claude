@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Todoist](https://www.todoist.com) through
 
 Create, find, update, and complete tasks, and manage projects, sections, labels, and due dates in the signed-in Todoist account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  todoist \
+  https://ai.todoist.net/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Clay](https://www.clay.com) through Clay'
 
 Find and enrich people and companies across 150+ data providers, run AI research agents (Claygent), and trigger your team's approved Clay workflows from the signed-in Clay workspace.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  clay \
+  https://api.clay.com/v3/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

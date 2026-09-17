@@ -4,6 +4,12 @@ Cursor plugin for checking how well a repo holds up under agent workflows. It pa
 
 By default, the full pass returns one overall score and one short list of the highest-leverage fixes. If the user wants the full breakdown, the agents can expose the component scores and the reasoning behind them.
 
+<!-- claude-code:start -->
+## Use in Claude Code
+
+The review agents don't run in Claude Code as written, because they set `model: fast` and `readonly: true`. Claude Code agents take `model: sonnet`, `opus`, `haiku`, or `fable`, and restrict writes with a `tools` list. The scanner itself runs anywhere with `npx -y agent-compatibility@latest`. See [the fork README](../README.md#skill-plugins).
+<!-- claude-code:end -->
+
 ## What it includes
 
 - `check-agent-compatibility`: full compatibility pass

@@ -4,6 +4,24 @@ Cursor plugin that connects agents to [Brevo](https://www.brevo.com) through Bre
 
 Manage contacts and lists, build email, SMS, and WhatsApp campaigns, and work with the built-in CRM's deals, companies, and tasks in your Brevo account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --header "Authorization: Bearer ${BREVO_MCP_TOKEN}" \
+  brevo \
+  https://mcp.brevo.com/v1/brevo/mcp
+```
+
+- Export `BREVO_MCP_TOKEN` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

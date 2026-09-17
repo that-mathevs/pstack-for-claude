@@ -6,6 +6,26 @@ This plugin signs you in with OAuth as your own X account and works with the ads
 
 This is a separate plugin from the [X](../x/) plugin: the ads MCP server lives on a different subdomain (`ads-api.x.com` vs `api.x.com`) and requires different OAuth scopes, so it needs its own authorization. Installing both means signing in twice — once per plugin.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --client-id NGdZYmo4VVp2T1BnRG55NlExOGQ6MTpjaQ \
+  --callback-port 8787 \
+  x-ads \
+  https://ads-api.x.com/mcp
+```
+
+- The client ID is the one upstream ships for Cursor. The command uses port 8787 to match Cursor's desktop redirect, but nobody has tested this sign-in from Claude Code.
+- `claude mcp add` has no flag for OAuth scopes, so the server's defaults apply: `ads.read`, `ads.write`, `media.write`, `offline.access`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

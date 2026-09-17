@@ -2,6 +2,12 @@
 
 Thermo-nuclear branch review for Cursor agents: deep correctness and security audits, harsh maintainability rubrics, and parallel subagent orchestration.
 
+<!-- claude-code:start -->
+## Use in Claude Code
+
+This plugin doesn't run in Claude Code as written. Its review subagents spawn helpers with Cursor's `Task` tool and load skills that the model can't start in Claude Code. For the same reviews, use Claude Code's `/code-review` and `/security-review`, or install the official `pr-review-toolkit` and `claude-security` plugins with `claude plugin install <name>@claude-plugins-official`. See [the fork README](../README.md#skill-plugins).
+<!-- claude-code:end -->
+
 ## Installation
 
 ```bash

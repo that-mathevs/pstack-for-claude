@@ -4,6 +4,28 @@ Cursor plugin that connects agents to a real browser through Microsoft's [Playwr
 
 Navigate pages, click and fill elements, take accessibility snapshots and screenshots, and run end-to-end checks from chat.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+The official Claude Code plugin `playwright` connects to this service. Install it instead of adding the server by hand:
+
+```bash
+claude plugin install playwright@claude-plugins-official
+```
+
+To add the same MCP server this plugin uses without the official plugin:
+
+```bash
+claude mcp add --scope user \
+  playwright \
+  -- npx -y @playwright/mcp@latest
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

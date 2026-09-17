@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Brex](https://www.brex.com) through Brex'
 
 Query company spend — expenses, receipts, bills, vendors, cards, balances, and travel — and annotate expenses, all within your own Brex permissions.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  brex \
+  https://api.brex.com/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Ashby](https://www.ashbyhq.com) through A
 
 Search candidates and jobs, prepare for interviews, review pipeline status and pending tasks, and take recruiting actions in the signed-in Ashby workspace.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  ashby \
+  https://mcp.ashbyhq.com/mcp/v1
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

@@ -4,6 +4,24 @@ Cursor plugin that connects agents to [Gmail](https://mail.google.com) through G
 
 Search threads, read messages, manage labels and drafts, and compose mail in the signed-in Gmail account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Claude has a Gmail connector. Turn it on at [claude.ai/customize/connectors](https://claude.ai/customize/connectors). Claude Code loads claude.ai connectors automatically when you sign in with a claude.ai subscription.
+
+To add the MCP server this plugin uses instead:
+
+```bash
+claude mcp add --transport http --scope user \
+  gmail \
+  https://gmailmcp.googleapis.com/mcp/v1
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

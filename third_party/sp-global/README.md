@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [S&P Global](https://docs.kensho.com/llmre
 
 Query S&P Capital IQ financials, prices, and transcripts.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  sp-global \
+  https://kfinance.kensho.com/integrations/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Calendly](https://calendly.com) through C
 
 Check and update availability, generate scheduling links, and book, cancel, or reschedule meetings in the signed-in Calendly account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  calendly \
+  https://mcp.calendly.com/
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

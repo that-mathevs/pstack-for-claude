@@ -4,6 +4,30 @@ Cursor plugin that connects agents to [GitHub](https://github.com) through GitHu
 
 Work with repositories, issues, pull requests, code search, and Actions under the permissions of a personal access token you provide.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+The official Claude Code plugin `github` connects to this service. Install it instead of adding the server by hand:
+
+```bash
+claude plugin install github@claude-plugins-official
+```
+
+To add the same MCP server this plugin uses without the official plugin:
+
+```bash
+claude mcp add --transport http --scope user \
+  --header "Authorization: Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" \
+  github \
+  https://api.githubcopilot.com/mcp/
+```
+
+- Export `GITHUB_PERSONAL_ACCESS_TOKEN` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

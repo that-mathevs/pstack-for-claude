@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Navan](https://navan.com) through Navan's
 
 Query expenses and spend trends, analyze travel bookings across flights, hotels, and ground transport, ask about policies, approval flows, and flag/decline reasons, and look up card details for the signed-in Navan user.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  navan \
+  https://mcp.navan.com/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Prerequisite
 
 A Navan admin must enable MCP for your organization first: **Navan → Configuration → Integrations → MCP** and toggle it on. Until then, connections from any MCP client will fail.

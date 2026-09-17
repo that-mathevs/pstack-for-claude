@@ -2,6 +2,12 @@
 
 Internal-style workflows for CI, code review, shipping, and test reliability. The kit is designed to be plug and play without requiring third-party service integrations.
 
+<!-- claude-code:start -->
+## Use in Claude Code
+
+16 of the 18 skills don't depend on Cursor. To use them in Claude Code, copy the skill folders into `~/.claude/skills/`. Two need changes first: `pr-review-canvas` opens its page in Cursor's built-in browser (use the `claude-in-chrome` skill instead), and `workflow-from-chats` reads Cursor chat history (Claude Code keeps transcripts in `~/.claude/projects/`, and pstack's `/automate-me` does the same job). Both agents use Cursor-only settings (`model: fast`, `is_background`, the `Task` tool), and the rules use Cursor's `.mdc` format, which Claude Code reads from `~/.claude/rules/*.md` instead. Claude Code's `/simplify` replaces `deslop`. See [the fork README](../README.md#skill-plugins).
+<!-- claude-code:end -->
+
 ## Installation
 
 ```bash

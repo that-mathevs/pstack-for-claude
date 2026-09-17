@@ -4,6 +4,24 @@ Cursor plugin that connects agents to [Similarweb](https://www.similarweb.com) t
 
 Pull Similarweb digital-intelligence data — website traffic and engagement, competitor comparison, audience demographics, and keyword metrics — for research without leaving the editor.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  --header "api-key: ${SIMILARWEB_API_KEY}" \
+  similarweb \
+  https://mcp.similarweb.com
+```
+
+- Export `SIMILARWEB_API_KEY` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

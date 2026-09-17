@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Semrush](https://www.semrush.com) through
 
 Pull Semrush keyword, backlink, traffic, and competitive-intelligence data into the editor without leaving your work.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  semrush \
+  https://mcp.semrush.com/v2/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

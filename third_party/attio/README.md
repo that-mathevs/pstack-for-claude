@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Attio](https://attio.com) through Attio's
 
 Search, create, and update CRM records (people, companies, deals, and custom objects), work with lists, notes, and tasks, and search emails, meetings, and comments in the signed-in Attio workspace.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  attio \
+  https://mcp.attio.com/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

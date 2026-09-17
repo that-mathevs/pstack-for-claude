@@ -4,6 +4,28 @@ Cursor plugin that connects agents to [Intercom](https://www.intercom.com) throu
 
 Search conversations and contacts, look up companies, and list, search, create, or update Help Center articles in the signed-in Intercom workspace.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+The official Claude Code plugin `intercom` connects to this service. Install it instead of adding the server by hand:
+
+```bash
+claude plugin install intercom@claude-plugins-official
+```
+
+To add the same MCP server this plugin uses without the official plugin:
+
+```bash
+claude mcp add --transport http --scope user \
+  intercom \
+  https://mcp.intercom.com/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

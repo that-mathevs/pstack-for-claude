@@ -4,6 +4,28 @@ Cursor plugin that connects agents to [Circleback](https://circleback.ai) throug
 
 Search meetings, transcripts, action items, calendar events, and emails, and look up people and companies in the signed-in Circleback account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+The official Claude Code plugin `circleback` connects to this service. Install it instead of adding the server by hand:
+
+```bash
+claude plugin install circleback@claude-plugins-official
+```
+
+To add the same MCP server this plugin uses without the official plugin:
+
+```bash
+claude mcp add --transport http --scope user \
+  circleback \
+  https://circleback.ai/api/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

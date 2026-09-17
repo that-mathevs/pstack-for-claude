@@ -6,6 +6,30 @@ Find and verify professional email addresses, list the contacts behind any compa
 
 Official Cursor setup: https://hunter.io/agents.md
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+The official Claude Code plugin `hunter` connects to this service. Install it instead of adding the server by hand:
+
+```bash
+claude plugin install hunter@claude-plugins-official
+```
+
+To add the same MCP server this plugin uses without the official plugin:
+
+```bash
+claude mcp add --transport http --scope user \
+  --header "X-API-Key: ${HUNTER_API_KEY}" \
+  hunter \
+  https://mcp.hunter.io/mcp
+```
+
+- Export `HUNTER_API_KEY` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

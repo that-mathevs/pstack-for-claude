@@ -2,6 +2,12 @@
 
 Cursor plugin with four skills for building voice features on Grok: realtime speech-to-speech, speech-to-text dictation, text-to-speech read-aloud, and a debug loop for voice sessions.
 
+<!-- claude-code:start -->
+## Use in Claude Code
+
+The skills call xAI's APIs from your app and don't depend on Cursor. To use them in Claude Code, copy `skills/*` into `~/.claude/skills/`. Where a skill says Cursor has no mic or speaker, the same holds for Claude Code: wire audio into the app, not the editor. See [the fork README](../README.md#skill-plugins).
+<!-- claude-code:end -->
+
 ## What it includes
 
 - `add-voice`: build speech-to-speech into an app, or replace an STT-LLM-TTS cascade / OpenAI Realtime with it. Wires the realtime session, safe auth, and the app mic; adds a waveform Voice Mode button to the composer.

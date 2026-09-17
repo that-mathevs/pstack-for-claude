@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Workable](https://www.workable.com) throu
 
 Search and advance candidates, manage jobs, offers, and requisitions, and work with employee, time-off, and performance records in the signed-in Workable account.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  workable \
+  https://mcp.workable.com/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

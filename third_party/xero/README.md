@@ -4,6 +4,26 @@ Cursor plugin that connects agents to [Xero](https://www.xero.com) through Xero'
 
 Read and write a Xero organisation's accounting and payroll data — invoices, contacts, chart of accounts, payments, quotes, journals, reports, and timesheets.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --scope user \
+  -e XERO_CLIENT_ID=${XERO_CLIENT_ID} \
+  -e XERO_CLIENT_SECRET=${XERO_CLIENT_SECRET} \
+  xero \
+  -- npx -y @xeroapi/xero-mcp-server@latest
+```
+
+- Export `XERO_CLIENT_ID` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Export `XERO_CLIENT_SECRET` before you run the command. Your shell fills in the value, and Claude Code saves it in `~/.claude.json`.
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.

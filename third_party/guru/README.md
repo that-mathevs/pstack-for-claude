@@ -4,6 +4,22 @@ Cursor plugin that connects agents to [Guru](https://www.getguru.com) through Gu
 
 Ask questions against a company's Guru knowledge base and connected sources, get permission-aware answers with citations, and draft or update Guru Cards.
 
+<!-- claude-code:start -->
+## Install in Claude Code
+
+Add the MCP server this plugin uses:
+
+```bash
+claude mcp add --transport http --scope user \
+  guru \
+  https://mcp.api.getguru.com/mcp
+```
+
+- Run `/mcp` inside Claude Code to finish any sign-in and check that the server connected.
+- `--scope user` makes the server available in every project. Use `--scope project` to share it through the repo's `.mcp.json`.
+
+<!-- claude-code:end -->
+
 ## Install
 
 1. Open **Cursor Settings → Plugins**.
