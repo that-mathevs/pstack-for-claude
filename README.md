@@ -15,6 +15,8 @@ claude plugin marketplace add that-mathevs/pstack-for-claude
 claude plugin install pstack@pstack-for-claude
 ```
 
+To update, run `claude plugin marketplace update pstack-for-claude`, then `claude plugin update pstack`, then restart Claude Code.
+
 [pstack/README.md](pstack/README.md) documents every skill and explains [why the port exists](pstack/README.md#why-this-fork-exists). [pstack/PORTING.md](pstack/PORTING.md) lists every Cursor-to-Claude Code change.
 
 ## Use the other plugins in Claude Code

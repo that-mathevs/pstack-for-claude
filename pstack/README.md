@@ -47,6 +47,15 @@ claude plugin install pstack@pstack-for-claude
 
 Restart Claude Code. Plugin skills carry the plugin name, so you type `/pstack:poteto-mode`. This README writes the short form, `/poteto-mode`.
 
+To update later, refresh the marketplace, then update the plugin, and restart Claude Code:
+
+```bash
+claude plugin marketplace update pstack-for-claude
+claude plugin update pstack
+```
+
+The first command only fetches the new listing. The second installs the new version. To remove pstack, run `claude plugin uninstall pstack`.
+
 To get the short names, clone the repo and link the skills and agents into your user directory instead:
 
 ```bash
