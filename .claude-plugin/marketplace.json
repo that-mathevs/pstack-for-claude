@@ -1,0 +1,17 @@
+{
+  "name": "pstack-for-claude",
+  "owner": {
+    "name": "Matthew Ernewein",
+    "url": "https://github.com/that-mathevs"
+  },
+  "description": "poteto's pstack from cursor/plugins, ported to Claude Code.",
+  "plugins": [
+    {
+      "name": "pstack",
+      "source": "./pstack",
+      "description": "poteto's pstack, ported to Claude Code. rigorous agent workflows you can parallelize with confidence.",
+      "category": "developer-tools",
+      "keywords": ["pstack", "poteto-mode", "workflow", "principles", "subagents"]
+    }
+  ]
+}

@@ -18,7 +18,7 @@ Operate as a **careful, cautious, and precise investigator**. Be honest about wh
 
 Parse what the user is asking. The **target** is usually a chunk of code, a pattern, a feature, or a named design decision. The **question** is usually a design rationale, a tradeoff, a motivating edge case, an external constraint, dead code, or a broad history sweep.
 
-If the target is vague ("why do we do it this way?" with no clear referent), make your best guess from conversation context (open files, recent edits, cursor location, what was just discussed). State your interpretation briefly so the user can redirect if you're off, then proceed.
+If the target is vague ("why do we do it this way?" with no clear referent), make your best guess from conversation context (open files, recent edits, the current selection, what was just discussed). State your interpretation briefly so the user can redirect if you're off, then proceed.
 
 ## Step 2. Establish the Code Anchor
 
@@ -59,7 +59,7 @@ Capture this as seed context (file paths, symbols, commits, PR numbers, linked t
 
 ### Discovery
 
-Before spawning investigators, list the available MCPs from the Cursor environment. Use the available-tools map when present. Otherwise inspect the `mcps/` directory Cursor exposes for enabled MCP servers.
+Before spawning investigators, list the available MCPs from the session's tool list. MCP tools are named `mcp__<server>__<tool>`, so group them by `<server>`. Deferred tools appear by name in system reminders and load through `ToolSearch`. Count those too. `claude mcp list` lists the configured servers when the tool list leaves a gap.
 
 Map each available MCP to one evidence category:
 
@@ -77,10 +77,12 @@ Aim for a complete **coverage map**, not a minimal one. Document the null, don't
 
 Launch all matching investigators in a single message so they run concurrently. Don't ask one agent to cover multiple MCPs.
 
+The configured models come from `~/.claude/rules/pstack-models.md` when present. A role value of `inherit` means omit `model`. If the `Agent` call rejects a `model` value, drop one tier (`fable` → `opus` → `sonnet` → `haiku`) and note the substitution.
+
 Subagent config (each):
-- `subagent_type`: `generalPurpose`
-- `model`: your configured why-investigators model (default `grok-4.6-fast-xhigh`)
-- `readonly`: `false` (agent mode). **Do not use readonly/Ask mode.** It strips MCP access, which disables MCP-backed investigators entirely. Investigators still shouldn't write anything.
+- `subagent_type`: `"general-purpose"`. Investigators read whole PRs, tickets, and threads, which `Explore` does not. Subagents inherit the session's MCP tools.
+- `model`: your configured why-investigators model (default `sonnet`)
+- read-only: investigators shouldn't write anything. The prompt template carries "Read-only: do not edit, write, or commit anything." Keep that line.
 
 Each investigator gets:
 1. The base prompt from `references/investigator-prompt.md`
@@ -122,9 +124,9 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 
 Spawn one synthesizer subagent:
 
-- `subagent_type`: `generalPurpose`
-- `model`: your configured why-synthesizer model (default `claude-fable-5-1-thinking-max`)
-- `readonly`: `false` (agent mode). The synthesizer's quality check spot-verifies citations, which can require MCP access. Readonly/Ask mode strips MCPs and defeats that.
+- `subagent_type`: `"general-purpose"`. The synthesizer's quality check spot-verifies citations, which can require MCP access. Subagents inherit the session's MCP tools.
+- `model`: your configured why-synthesizer model (default `fable`)
+- read-only: the prompt template carries a "Read-only: do not edit, write, or commit anything" line. Keep it.
 
 The synthesizer gets:
 1. The investigator findings, including any null results and any categories skipped with justification

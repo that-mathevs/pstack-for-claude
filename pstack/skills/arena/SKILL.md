@@ -8,9 +8,11 @@ disable-model-invocation: true
 
 Fan out N parallel attempts at the same task. Read every candidate end to end. Pick the strongest as the base. Graft the best ideas from the others into it. Verify the synthesized result.
 
+Where this skill names a principle skill (**x** is the `principle-x` directory), read its `SKILL.md` with `Read`. Resolve the path in this order: `<base directory>/../<name>/SKILL.md` (the base directory Claude Code stated when this skill loaded), then `~/.claude/skills/<name>/SKILL.md`, then `.claude/skills/<name>/SKILL.md`, then `find ~/.claude/plugins -path '*/pstack/skills/<name>/SKILL.md'`.
+
 ## Start
 
-Open a todolist with one entry per phase before launching anything.
+Open the task list (`TaskCreate`) with one entry per phase before launching anything.
 
 1. Frame
 2. Fan out
@@ -25,12 +27,12 @@ The N candidates will receive the same prompt, so the prompt is the contract.
 
 1. State the artifact each candidate is producing.
 2. Derive the rubric. State what success looks like for *this* task, then turn it into 3-6 concrete gradeable criteria. The rubric is the picker's tool in Phase D. Candidates only see the task.
-3. Pick the runners. Use `arena runners` from `~/.cursor/rules/pstack-models.mdc` when present. Otherwise default to one each on `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`. Spawn more when the arena covers multiple design directions. Same model N times when the work is generation-bound rather than judgment-sensitive.
-4. Assign output paths. Each candidate writes to its own location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
+3. Pick the runners. Use `arena runners` from `~/.claude/rules/pstack-models.md` when present. Otherwise default to one each on `fable`, `opus`, `sonnet`. Spawn more when the arena covers multiple design directions. Same model N times when the work is generation-bound rather than judgment-sensitive. Claude tiers are less diverse than a panel of vendors, so when the task has more than one plausible direction, lean on that and assign runners by direction rather than trusting the tiers to diverge on their own. A role entry of `inherit` means omit `model`. If the `Agent` call rejects a `model` value, drop one tier (`fable` → `opus` → `sonnet` → `haiku`) and note the substitution in the synthesis record.
+4. Assign output paths. Each candidate writes to its own location (a git worktree via `isolation: "worktree"` where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
 
 ## Phase B: Fan out
 
-Spawn all N subagents in one message with `run_in_background: true`, each with the task, the path to the shared grounding, its own output path, and instructions to produce both the artifact and a short rationale.
+Spawn all N subagents in one message (Agent calls in one message run in parallel in the background, and you are notified as each completes), each with the task, the path to the shared grounding, its own output path, and instructions to produce both the artifact and a short rationale.
 
 Each rationale names the alternatives the candidate considered and what it rejected.
 
@@ -38,7 +40,7 @@ If a candidate fails to produce output, proceed with N-1 and note the dropout in
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, choose one model from the `arena cross-judge pool` in `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.
+After all Phase B candidates complete, choose one model from the `arena cross-judge pool` in `~/.claude/rules/pstack-models.md` when present. Otherwise use `fable`, `opus`, `sonnet`. Pick a tier different from the parent's model (the system prompt names it). An `inherit` entry is the parent's model, so skip it unless nothing else is left. Spawn one judge subagent on that model with `subagent_type: "general-purpose"` and "read-only: do not edit, write, or commit anything" in its brief. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.
 
 ## Phase D: Pick a base
 

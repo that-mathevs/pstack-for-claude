@@ -8,9 +8,11 @@ disable-model-invocation: true
 
 Design before implementing. Sketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across multiple model perspectives, then fill in code against the chosen sketch. If implementation proves the sketch wrong, throw it out and redesign.
 
+Where this skill says to run another pstack skill (**how**, **why**, **arena**, **interrogate**) or names a principle skill (**x** is the `principle-x` directory), read that skill's `SKILL.md` with `Read` and follow it. Resolve the path in this order: `<base directory>/../<name>/SKILL.md` (the base directory Claude Code stated when this skill loaded), then `~/.claude/skills/<name>/SKILL.md`, then `.claude/skills/<name>/SKILL.md`, then `find ~/.claude/plugins -path '*/pstack/skills/<name>/SKILL.md'`. Pass resolved absolute paths to any subagent.
+
 ## Start
 
-Open a todolist with one entry per phase before starting.
+Open the task list (`TaskCreate`) with one entry per phase before starting.
 
 1. Ground
 2. Sketch
@@ -30,7 +32,7 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.
 
-Use your configured architect runners (defaults `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`).
+Use your configured architect runners from `~/.claude/rules/pstack-models.md` (defaults `fable`, `opus`, `sonnet`. `inherit` means omit `model`). Claude tiers are less diverse than a panel of vendors, so give each runner a different whole-shape direction to start from in its brief rather than counting on the tiers to diverge.
 
 Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
 

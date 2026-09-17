@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 # Swarm
 
-Fan out N parallel cloud workers. They may cover separate slices, race the same brief, or mix both. The parent waits, aggregates, and returns one report.
+Fan out N parallel background subagents. They may cover separate slices, race the same brief, or mix both. The parent waits, aggregates, and returns one report.
 
 ## Start
 
-Open a todolist with one entry per phase before launching anything.
+Open the task list (`TaskCreate`) with one entry per phase before launching anything.
 
 1. Frame
 2. Fan out
@@ -21,15 +21,15 @@ Open a todolist with one entry per phase before launching anything.
 
 1. State the done predicate and the artifact or report the swarm must return.
 2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
-3. Set N from the user or derive it from the shape. N is total workers, not the cloud concurrency limit.
-4. Pick the worker model from `swarm workers` in `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use `grok-4.6-fast-xhigh`. For a model race, name each arm's model up front.
+3. Set N from the user or derive it from the shape. N is total workers, not a concurrency limit.
+4. Pick the worker model from `swarm workers` in `~/.claude/rules/pstack-models.md` when present. Otherwise use `sonnet`. A value of `inherit` means omit `model`. For a model race, name each arm's model up front (`fable`, `opus`, `sonnet`, `haiku`). If the `Agent` call rejects a `model` value, drop one tier and note the substitution in the report.
 5. Give each worker its own writable output when it writes.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message with `subagent_type: generalPurpose`, `environment: "cloud"`, `run_in_background: true`, and the configured model. Use `environment: "local"` only when the worker needs access to something on the user's computer.
+Spawn all N workers in one message with `subagent_type: "general-purpose"` and the configured model. Agent calls in one message run in parallel in the background, and you are notified as each completes. Give every worker that writes `isolation: "worktree"` so it gets its own git worktree. Read-only workers need no isolation. Use `isolation: "remote"` only when the session offers it.
 
-When a worker must start from a non-default pushed branch, pass `cloud_base_branch`.
+When a worker must start from a non-default branch, put the branch in the brief. A worktree worker runs `git fetch && git checkout <branch>` first.
 
 Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence.
 

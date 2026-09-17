@@ -1,3 +1,14 @@
+> **This fork ports [pstack](pstack/) to Claude Code.** It exists because upstream pstack is written for Cursor's agent harness. Its subagent tool, model slugs, config paths, and transcript paths don't exist in Claude Code, so the skills quietly misfire there. See [pstack/README.md](pstack/README.md#why-this-fork-exists) for the reasons and [pstack/PORTING.md](pstack/PORTING.md) for what changed.
+>
+> Install in Claude Code:
+>
+> ```bash
+> claude plugin marketplace add that-mathevs/pstack-for-claude
+> claude plugin install pstack@pstack-for-claude
+> ```
+>
+> Only `pstack/` is ported. Every other plugin below is upstream's Cursor plugin, unchanged.
+
 # Cursor plugins
 
 Official Cursor plugins for popular developer tools, frameworks, and SaaS products. Each plugin is a standalone directory at the repository root with its own `.cursor-plugin/plugin.json` manifest.

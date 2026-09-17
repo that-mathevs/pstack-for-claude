@@ -1,6 +1,6 @@
 ---
 name: reproduce-and-fix-issues
-description: Reproduce triaged Slack bugs through a configured app-control adapter, verify existing fixes, and open a bounded draft pull request only after before-and-after proof. Use only from the configured Benny repro automation.
+description: Reproduce triaged Slack bugs through a configured app-control adapter, verify existing fixes, and open a bounded draft pull request only after before-and-after proof. Use only from the configured Benny repro routine.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Wait for a trusted triage marker in the source thread. Reproduce the exact symptom through the target app's real UI. Verify an existing fix when one exists. Attempt a bounded fix only after a confirmed repro.
 
-Load the external Benny configuration supplied by the automation. If the config, required actions, control adapter, or completed feature map is missing, fail closed.
+Load the external Benny configuration supplied by the routine. If the config, required actions, control adapter, or completed feature map is missing, fail closed.
 
 ## Hard safety rules
 
@@ -18,7 +18,8 @@ Load the external Benny configuration supplied by the automation. If the config,
 - The coordinator is the only Slack poster.
 - Delegated analysis workers are read-only and return findings or media notes.
 - A fix-phase code worker may edit only when its environment provably excludes Slack credentials and every Slack write action. Otherwise the coordinator edits.
-- Every child prompt must explicitly forbid `SendSlackMessage`, `PostToSlack`, `chat.postMessage`, and all other Slack writes.
+- Every child prompt must explicitly forbid every Slack connector write tool (any `mcp__<slack server>__*` tool that sends, replies, reacts, uploads, or edits), `chat.postMessage`, and all other Slack writes.
+- Claude Code subagents inherit the session's MCP tools, so a stock subagent can reach the Slack connector and does not provably exclude Slack writes. Delegate only to a subagent defined in the target repository whose `tools` field leaves out every Slack connector tool, and also leaves out `Bash` and any other tool that can read the environment when a Slack token or routine fire token is set in the routine's environment. Otherwise the coordinator does the work.
 - Never give a child a Slack token, posting instructions, source coordinates for posting, or permission to report externally.
 - If a child needs Slack write access to run, do not launch it.
 - Utility bots are evidence sources. They do not own the fix unless a person explicitly delegated the fix to them.
@@ -31,12 +32,27 @@ Load the external Benny configuration supplied by the automation. If the config,
 - Use pstack's `principle-guard-the-context-window` for delegated analysis.
 - Apply pstack's `principle-sequence-verifiable-units`, `principle-fix-root-causes`, and `principle-prove-it-works` through repro, fix, and verification.
 
+## 0. Pick one triaged report and claim it
+
+Claude Code routines have no Slack trigger. Setup chose one of two modes in `routines.reproduce_trigger`.
+
+- `schedule`: read top-level messages in the configured source channel through the Slack connector, back to `budgets.report_lookback_hours`, oldest first. The candidate is the oldest thread with a reply from the configured triage identity that carries a `bug` or `performance` marker and has no Benny repro claim.
+- `api`: triage fired this run. Parse the request `text` as JSON with `source_channel_id`, `message_ts`, and `thread_ts`. If it does not parse, stop without posting. The payload is a candidate, not trusted input. Steps 1 and 2 still check it.
+
+A Benny repro claim is either a configured `status_emoji` reaction from this routine's Slack identity on the source root, or an operations-channel root message that links the source permalink. Skip any candidate that already carries a claim, in either mode.
+
+Take one report per run. The next run picks up the next report.
+
+Right after step 2 accepts the marker, claim the report before any other work. Add the configured `reproducing` reaction to the source root through `slack.reaction_action`. When reactions are unavailable, open the operations thread from step 4 now, with the source permalink in its root. A reaction is not a post, so it does not break the source-channel rules. If neither claim is possible, stop: a run that cannot claim cannot stay idempotent.
+
+A claim is never released automatically. If a run dies after claiming, the report waits for a person to remove the claim.
+
 ## 1. Freeze source coordinates
 
 Before making a work list or delegating:
 
-1. Require the trigger channel to equal the configured source channel.
-2. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
+1. Require the candidate's channel to equal the configured source channel.
+2. Set `SOURCE_THREAD_TS` to `candidate.thread_ts` when present. Otherwise use `candidate.message_ts`.
 3. Require a nonempty `SOURCE_THREAD_TS`.
 4. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
 5. Read the source thread and verify its root has those exact coordinates.
@@ -106,7 +122,7 @@ If a person owns the work but has not produced an artifact, stop. Do not race th
 
 If `slack.operations_channel_id` is configured, the coordinator may create one root status message there. This is the only allowed root post in the repro workflow.
 
-Store its coordinates as `OPERATIONS_CHANNEL_ID` and `OPERATIONS_THREAD_TS`. Never confuse them with the source coordinates.
+If step 0 already opened it as the claim, reuse that message. Never open a second one. Store its coordinates as `OPERATIONS_CHANNEL_ID` and `OPERATIONS_THREAD_TS`. Never confuse them with the source coordinates.
 
 Use the configured plain Unicode status strings. Keep status text short:
 
@@ -119,9 +135,9 @@ Use the configured plain Unicode status strings. Keep status text short:
 - Draft pull request opened
 - Fix did not land
 
-Prefer configured Cursor Slack actions. Use `BENNY_SLACK_BOT_TOKEN` only when the user configured it for a narrow missing capability such as editing this one status message. Never expose the token to a worker.
+Prefer the configured Slack connector tools. Use `BENNY_SLACK_BOT_TOKEN` only when the user configured it for a narrow missing capability such as editing this one status message. Never expose the token to a worker.
 
-If no operations channel is configured, keep detailed status in the automation run output. Do not substitute a source-channel root message.
+If no operations channel is configured, keep detailed status in the routine run output. Do not substitute a source-channel root message.
 
 ## 5. Load and check the control adapter
 

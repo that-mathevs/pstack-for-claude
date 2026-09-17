@@ -17,33 +17,34 @@ If the scope is ambiguous, state your interpretation and explore. The user can r
 
 When in doubt, take the simple path.
 
+The configured models come from `~/.claude/rules/pstack-models.md` when present. A role value of `inherit` means omit `model`. If the `Agent` call rejects a `model` value, drop one tier (`fable` → `opus` → `sonnet` → `haiku`) and note the substitution.
+
 ## Step 2a. Explore (complex questions only)
 
 Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Spawn all explorers in a single message:
 
-- `subagent_type`: `generalPurpose`
-- `model`: your configured how-explorer model (default `grok-4.6-fast-xhigh`)
-- `readonly`: `true`
+- `subagent_type`: `"Explore"` (read-only, no edit tools)
+- `model`: your configured how-explorer model (default `sonnet`)
 
 Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
 
 ## Step 2b. Direct Explain (simple questions)
 
-Spawn one Task subagent that explores and explains in one pass:
+Spawn one subagent that explores and explains in one pass:
 
-- `subagent_type`: `generalPurpose`
-- `model`: your configured how-explainer model (default `claude-fable-5-1-thinking-max`)
-- `readonly`: `true`
+- `subagent_type`: `"general-purpose"` (it reads whole files, which `Explore` does not)
+- `model`: your configured how-explainer model (default `fable`)
+- read-only: the prompt template already says "Read-only: do not edit, write, or commit anything." Keep that line.
 
 Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
 
 ## Step 3. Synthesize (complex questions only)
 
-Once all explorers have returned, spawn one Task subagent to synthesize their findings into one explanation:
+Once all explorers have returned, spawn one subagent to synthesize their findings into one explanation:
 
-- `subagent_type`: `generalPurpose`
-- `model`: your configured how-explainer model (default `claude-fable-5-1-thinking-max`)
-- `readonly`: `true`
+- `subagent_type`: `"general-purpose"`
+- `model`: your configured how-explainer model (default `fable`)
+- read-only: keep the template's "Read-only: do not edit, write, or commit anything." line.
 
 Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
 

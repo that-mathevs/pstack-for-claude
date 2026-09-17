@@ -1,6 +1,6 @@
 ---
 name: triage-issue-reports
-description: Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage automation.
+description: Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage routine.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Classify one Slack report and post one useful verdict in its source thread. Create a tracker issue only for a clear, new bug. Do not reproduce or fix it here.
 
-Load the external Benny configuration supplied by the automation. If the config is missing, malformed, or incomplete, stop without posting or writing to the tracker.
+Load the external Benny configuration supplied by the routine. If the config is missing, malformed, or incomplete, stop without posting or writing to the tracker.
 
 ## Hard safety rules
 
@@ -20,20 +20,32 @@ Load the external Benny configuration supplied by the automation. If the config 
 - Post one substantive verdict. Do not narrate progress.
 - The coordinator is the only Slack poster.
 - Delegated workers return findings only. They must be read-only and receive no Slack credentials or write actions.
-- Every child prompt must forbid `SendSlackMessage`, `PostToSlack`, `chat.postMessage`, and every other Slack write.
-- If worker isolation cannot enforce those limits, do the work in the coordinator.
+- Every child prompt must forbid every Slack connector write tool (any `mcp__<slack server>__*` tool that sends, replies, reacts, uploads, or edits), `chat.postMessage`, and every other Slack write.
+- If worker isolation cannot enforce those limits, do the work in the coordinator. Claude Code subagents inherit the session's MCP tools, so a stock subagent can reach the Slack connector and does not enforce them. Delegate only to a subagent defined in the target repository whose `tools` field leaves out every Slack connector tool, and also leaves out `Bash` and any other tool that can read the environment when a Slack token is set in the routine's environment.
 - Never create an issue that cannot link back to the source thread.
 - Prefer no ticket over a guessed or duplicate ticket.
 - Apply pstack's `principle-separate-before-serializing-shared-state` to source coordinates.
 - Apply pstack's `principle-minimize-reader-load` and `unslop` skills to the final verdict.
 
+## 0. Find unhandled reports
+
+The routine runs on a schedule. Claude Code routines have no Slack trigger, so each run finds its own reports.
+
+1. Read top-level messages in the configured source channel through the Slack connector, back to `budgets.report_lookback_hours`, oldest first.
+2. Skip a report when a reply from the configured triage identity in its thread already carries a configured marker. That reply is the durable record that the report was handled.
+3. When `slack.reaction_action` is configured, skip a report whose root carries the configured `seen` reaction from the triage identity, unless no verdict followed and the root is older than one schedule interval plus `budgets.triage_total_minutes`. Judge that by the root's age, not the reaction's. Treat such a claim as stale and take the report over. Step 7's source-permalink check still stops a duplicate ticket from the abandoned run.
+4. Take at most `budgets.max_reports_per_run` reports. More reports wait for the next run.
+5. Triage the reports one at a time. Run steps 1 through 9 for each report with its own coordinates. Never carry coordinates, evidence, or tracker state from one report to the next.
+
+When `slack.reaction_action` is configured, add the `seen` reaction to the source root right after step 1 freezes its coordinates. A reaction is a claim, not a post. It never replaces the verdict.
+
 ## 1. Freeze source coordinates
 
 Before making a work list or delegating:
 
-1. Read `source_channel_id` from the trigger.
+1. Read `source_channel_id` from the candidate report.
 2. Require it to equal the configured source channel.
-3. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
+3. Set `SOURCE_THREAD_TS` to `candidate.thread_ts` when present. Otherwise use `candidate.message_ts`.
 4. Require a nonempty `SOURCE_THREAD_TS`.
 5. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
 6. Read the thread and verify that its root has exactly those coordinates.
@@ -221,20 +233,22 @@ Marker contract:
 [benny:other]
 ```
 
-Use only the configured marker strings. The repro automation trusts the marker only when it comes from the configured triage identity in this source thread.
+Use only the configured marker strings. The repro routine trusts the marker only when it comes from the configured triage identity in this source thread.
 
 After posting, read the same source thread and verify the verdict appears under `SOURCE_THREAD_TS`. If it does not, never retry at the root.
 
-If this run created a tracker issue and the verdict did not land, use the adapter's compensation action. Verify that the issue is canceled, closed, or deleted. If compensation cannot be verified, report the failure only in the automation run output.
+If this run created a tracker issue and the verdict did not land, use the adapter's compensation action. Verify that the issue is canceled, closed, or deleted. If compensation cannot be verified, report the failure only in the routine run output.
+
+When `routines.reproduce_trigger` is `api` and the verified verdict carries a bug or performance marker, fire the repro routine once. Send `POST` to the URL in the environment variable named by `routines.reproduce_fire_url_env`, with `Authorization: Bearer <token>` from the variable named by `routines.reproduce_fire_token_env`, and a JSON body whose `text` is the report's coordinates as JSON. Never guess the URL or token, never print the token, and never pass either to a worker. If either variable is missing or the call fails, report it in the routine run output and do not retry. A scheduled repro routine does not need this step.
 
 ## 10. Watch one follow-up window
 
-Watch the source thread for the configured follow-up window, then stop.
+Watch the source thread for the configured follow-up window, then stop. When this run triaged several reports, watch all of their threads together in one window after the last verdict.
 
 - Answer only a direct question to the triage identity.
 - Apply a concrete correction to the tracker issue when safe.
 - Do not emit a second marker in the same run.
 - Stay out of human coordination and side chatter.
-- Stop early if someone asks the automation to stop.
+- Stop early if someone asks the routine to stop.
 
-Do not extend the window more than once. A new report should start a new run.
+Do not extend the window more than once. A new report waits for the next scheduled run.
